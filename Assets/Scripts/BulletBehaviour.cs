@@ -17,11 +17,11 @@ namespace Shooter
 
         private Vector2 direction;
 
-        private void Start()
+        public void Init()
         {
             cursor = FindObjectOfType<CursorFollowMouse>().gameObject.transform;
             sprite = GetComponent<SpriteRenderer>();
-            UpdateDirection();
+            direction = Vector2.zero;
         }
 
         public void UpdateDirection()

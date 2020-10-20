@@ -32,6 +32,7 @@ namespace Shooter
             for (int i = 0; i < pool.amountToPool; i++)
             {
                 BulletBehaviour b = Instantiate(pool.objectToPool);
+                b.Init();
                 b.gameObject.SetActive(false);
                 pool.objects.Add(b);
                 pool.ready.Add(true);
@@ -56,8 +57,8 @@ namespace Shooter
                 {
                     pool.ready[i] = false;
                     pool.objects[i].gameObject.SetActive(true);
-                    //pool.objects[i].UpdateDirection();
                     pool.objects[i].transform.position = positon;
+                    pool.objects[i].UpdateDirection();
                     return true;
                 }
             }
