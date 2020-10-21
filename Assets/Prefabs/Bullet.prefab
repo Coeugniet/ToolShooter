@@ -97,4 +97,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   self: {fileID: 5527937302578335262}
   cursor: {fileID: 0}
+  sprite: {fileID: 3287030796661139488}
+  pool: {fileID: 0}
   data: {fileID: 11400000, guid: 80b77dfd6597ca844b6c914a3fe9d870, type: 2}

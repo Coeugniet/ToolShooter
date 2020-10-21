@@ -11,6 +11,8 @@ namespace Shooter
         private Transform self;
         [SerializeField]
         private Animator _animator;
+        [SerializeField]
+        private Pool pool;
 
         private Coroutine shootCor;
 
@@ -35,7 +37,7 @@ namespace Shooter
 
         public IEnumerator Shoot()
         {
-            if (!BulletPool.instance.GetFirstReady(self.position + new Vector3(0.25f, 0f))) Debug.Break();
+            if (!pool.GetFirstReady(self.position + new Vector3(0.25f, 0f))) Debug.Break();
             yield return new WaitForSeconds(1f);
             shootCor = null;
         }

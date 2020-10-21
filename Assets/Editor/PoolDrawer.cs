@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Shooter {
-    [CustomPropertyDrawer(typeof(Pool))]
+    [CustomPropertyDrawer(typeof(PoolStruct))]
     public class PoolDrawer : PropertyDrawer
     {
 
@@ -39,14 +39,12 @@ namespace Shooter {
             EditorGUI.PropertyField(objectToPoolRect, objectToPoolProp, new GUIContent("Object"));
             EditorGUI.PropertyField(amountToPoolRect, amountToPoolProp, new GUIContent("Amount"));
             EditorGUIUtility.labelWidth = oldWidth;
-            //EditorGUI.DrawRect(listRect, Color.red);
 
             int i = 0;
             int j = 0;
             int k = 0;
             float padding = 3;
             float rw = (EditorGUIUtility.currentViewWidth - 27 - ((numberOfCol - 1) * padding)) / numberOfCol;
-            Debug.Log(listProp.arraySize);
             while (k < listProp.arraySize)
             {
                 if (j == 10)

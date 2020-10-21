@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Shooter
 {
-    public class BulletBehaviour : MonoBehaviour
+    public class BulletBehaviour : Poolable
     {
         [SerializeField]
         private Transform self;
@@ -12,19 +13,21 @@ namespace Shooter
         private Transform cursor;
         [SerializeField]
         private SpriteRenderer sprite;
+        [SerializeField]
+        private Pool pool;
 
         public BulletDataProfile data;
-
         private Vector2 direction;
 
-        public void Init()
+        public override void Initialise()
         {
             cursor = FindObjectOfType<CursorFollowMouse>().gameObject.transform;
             sprite = GetComponent<SpriteRenderer>();
+            pool = GetComponentInParent<Pool>();
             direction = Vector2.zero;
         }
 
-        public void UpdateDirection()
+        public override void OnPooled()
         {
             direction = (cursor.position - self.position).normalized;
         }
@@ -34,7 +37,7 @@ namespace Shooter
             self.Translate(direction * data.speed * Time.deltaTime);
             if (!sprite.isVisible)
             {
-                BulletPool.instance.Restock(this);
+                pool.Restock(this);
             }
         }
     }

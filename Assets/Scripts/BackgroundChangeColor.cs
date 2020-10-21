@@ -7,22 +7,16 @@ namespace Shooter
     public class BackgroundChangeColor : MonoBehaviour
     {
 
-        public Camera _camera;
-        public float _index;
-
-        float step;
+        public Camera myCamera;
+        
+        float index;
+        [Range(0f, 0.1f)]
+        public float step;
 
         // Start is called before the first frame update
         void Start()
         {
-            step = 100 / 360;
             StartCoroutine(ChangeColor());
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
 
         IEnumerator ChangeColor()
@@ -30,9 +24,9 @@ namespace Shooter
             while (true)
             {
                 yield return new WaitForSeconds(0.1f);
-                _camera.backgroundColor = Color.HSVToRGB(_index, .12f, 1);
-                _index %= 1;
-                _index += step;
+                index %= 1f;
+                myCamera.backgroundColor = Color.HSVToRGB(index, .12f, 1);
+                index += step;
             }
         }
     }

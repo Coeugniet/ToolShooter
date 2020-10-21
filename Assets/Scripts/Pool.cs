@@ -1,40 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Shooter
 {
     [System.Serializable]
-    public struct Pool
+    public struct PoolStruct
     {
-        public BulletBehaviour objectToPool;
+        public Poolable objectToPool;
         public int amountToPool;
-        public List<BulletBehaviour> objects;
+        public List<Poolable> objects;
         public List<bool> ready;
     }
 
-    public class BulletPool : MonoBehaviour
+    public class Pool : MonoBehaviour
     {
-        public static BulletPool instance;
-        public Pool pool;
-
-        private void Awake()
-        {
-            instance = this;
-        }
+        public PoolStruct pool;
 
         public void Init()
         {
             if (pool.objects.Count > 0) DestroyPool();
-            pool.objects = new List<BulletBehaviour>();
+            pool.objects = new List<Poolable>();
             pool.ready = new List<bool>();
 
             for (int i = 0; i < pool.amountToPool; i++)
             {
-                BulletBehaviour b = Instantiate(pool.objectToPool);
-                b.Init();
-                b.gameObject.SetActive(false);
-                pool.objects.Add(b);
+                Poolable o = Instantiate(pool.objectToPool, transform);
+                o.Initialise();
+                o.gameObject.SetActive(false);
+                pool.objects.Add(o);
                 pool.ready.Add(true);
             }
         }
@@ -58,18 +53,18 @@ namespace Shooter
                     pool.ready[i] = false;
                     pool.objects[i].gameObject.SetActive(true);
                     pool.objects[i].transform.position = positon;
-                    pool.objects[i].UpdateDirection();
+                    pool.objects[i].OnPooled();
                     return true;
                 }
             }
             return false;
         }
 
-        public void Restock(BulletBehaviour b)
+        public void Restock(Poolable o)
         {
             for (int i = 0; i < pool.objects.Count; i++)
             {
-                if (pool.objects[i] == b)
+                if (pool.objects[i] == o)
                 {
                     pool.ready[i] = true;
                     pool.objects[i].gameObject.SetActive(false);

@@ -5,8 +5,8 @@ using UnityEditor;
 
 namespace Shooter
 {
-    [CustomEditor(typeof(BulletPool))]
-    public class BulletPoolEditor : Editor
+    [CustomEditor(typeof(Pool))]
+    public class PoolEditor : Editor
     {
 
         SerializedProperty poolProperty;
@@ -20,16 +20,16 @@ namespace Shooter
         {
             serializedObject.Update();
 
-            BulletPool b = (BulletPool)serializedObject.targetObject;
+            Pool o = (Pool)serializedObject.targetObject;
 
             if (GUILayout.Button("Initialise Bullets"))
             {
-                b.Init();
+                o.Init();
             }
 
             if (GUILayout.Button("Destroy Bullets"))
             {
-                b.DestroyPool();
+                o.DestroyPool();
             }
 
             EditorGUILayout.PropertyField(poolProperty);

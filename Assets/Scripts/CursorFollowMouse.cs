@@ -6,7 +6,6 @@ namespace Shooter
 {
     public class CursorFollowMouse : MonoBehaviour
     {
-
         [SerializeField]
         private Transform self;
         [SerializeField]
