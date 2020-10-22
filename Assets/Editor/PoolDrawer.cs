@@ -14,9 +14,8 @@ namespace Shooter {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             amountToPoolProp = property.FindPropertyRelative("amountToPool");
-            float numberOfLines = 1 + (EditorGUIUtility.currentViewWidth / numberOfCol);
-            if (EditorGUIUtility.currentViewWidth < 332) numberOfLines++;
-            return numberOfLines * (EditorGUIUtility.singleLineHeight + 2);
+            float numberOfLines = amountToPoolProp.intValue / numberOfCol;
+            return ((numberOfLines + 1) * ((EditorGUIUtility.currentViewWidth - ((numberOfCol - 1) * 3)) / numberOfCol)) + 30;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

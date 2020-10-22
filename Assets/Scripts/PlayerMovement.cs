@@ -22,5 +22,17 @@ namespace Shooter
         {
             _body.velocity = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f) * data.speed * Time.deltaTime;
         }
+
+        private void OnCollisionEnter2D(Collision2D collision) {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Ennemy")) {
+                GameOver.PauseGame();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision) {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Bonus")) {
+                Destroy(collision.gameObject);
+            }
+        }
     }
 }

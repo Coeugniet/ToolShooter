@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 namespace Shooter
@@ -10,6 +11,8 @@ namespace Shooter
 
         LevelProfile level;
         bool isMousePressed = false;
+        int layer = 1;
+        int selectedObject = 0;
 
         public static void Init(LevelProfile level)
         {
@@ -19,7 +22,7 @@ namespace Shooter
 
             window.Show();
             window.titleContent = new GUIContent(level.name + " editor");
-            window.position = new Rect(Screen.currentResolution.width * 0.30f, Screen.currentResolution.height * 0.20f, Screen.currentResolution.width * 0.40f, Screen.currentResolution.height * 0.65f);
+            window.position = new Rect(Screen.currentResolution.width * 0.35f, Screen.currentResolution.height * 0.17f, Screen.currentResolution.width * 0.30f, Screen.currentResolution.height * 0.65f);
         }
 
         public void OnGUI()
@@ -29,56 +32,85 @@ namespace Shooter
                 EditorGUILayout.LabelField("Level is null : ");
                 return;
             }
-
-            EditorGUILayout.LabelField("Currently displayed level : " + level.name);
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 25;
+            style.normal.textColor = Color.white;
+            EditorGUILayout.LabelField("Level Name : " + level.name, style);
+            EditorGUILayout.Space(15);
             if (GUILayout.Button("Erase")) Erase();
 
-            if (level.matrix.Length > 0)
-            {
-                int matrixSize = LevelProfile.levelSize;
-                int offset = 2;
-                int marginTop = 50;
-                Vector2 tileSize = new Vector2(
-                    (position.width - (matrixSize * offset)) / matrixSize,
-                    (position.height - (matrixSize * offset + marginTop)) / matrixSize
-                );
+            Rect spritesRect = EditorGUILayout.GetControlRect();
+            spritesRect.y += 8;
+            spritesRect.height = 60;
+            Event e = Event.current;
+            float spriteWidth = (spritesRect.width / (level.objects.Length + 1));
+            float spriteHeight = (spritesRect.height);
 
-                Rect tilePosition;
-                Event e = Event.current;
+            Rect eraserSpriteRect = new Rect(spritesRect.x, spritesRect.y, spriteWidth, spriteHeight);
+            GUI.DrawTextureWithTexCoords(eraserSpriteRect, level.eraser, new Rect(0, 0, 1, 1), true);
+            if (eraserSpriteRect.Contains(e.mousePosition) && isMousePressed) selectedObject = -1;
 
-                for (int i = 0; i < matrixSize; i++)
-                {
-                    for (int j = 0; j < matrixSize; j++)
-                    {
-                        tilePosition = new Rect(
-                            j * (tileSize.x + offset) + (offset / 2),
-                            i * (tileSize.y + offset) + (offset / 2) + marginTop,
-                            tileSize.x,
-                            tileSize.y);
+            for (int i = 0; i < level.objects.Length; i++) {
+                Sprite s = level.objects[i].GetComponent<SpriteRenderer>().sprite;
+                Rect spriteRect = new Rect(spritesRect.x + (i + 1) * spriteWidth, spritesRect.y, spriteWidth,spriteHeight);
+                DrawSprite(spriteRect, level.objects[i].GetComponent<SpriteRenderer>().sprite);
 
-                        if (!isMousePressed && e.type == EventType.MouseDown) isMousePressed = true;
-                        if (isMousePressed && e.type == EventType.MouseUp) isMousePressed = false;
+                if (!isMousePressed && e.type == EventType.MouseDown) isMousePressed = true;
+                if (isMousePressed && e.type == EventType.MouseUp) isMousePressed = false;
 
-                        if (tilePosition.Contains(e.mousePosition) && isMousePressed) level.matrix[i * matrixSize + j] = 1;
-
-                        if (level.matrix[i * matrixSize + j] == 1) EditorGUI.DrawRect(tilePosition, Color.red);
-                        else EditorGUI.DrawRect(tilePosition, Color.blue);
-                    }
+                if (spriteRect.Contains(e.mousePosition) && isMousePressed) {
+                    selectedObject = i;
                 }
-
-                Repaint();
             }
 
+            int layerSize = LevelProfile.levelSize;
+            int offset = 2;
+            int marginTop = 145;
+            Vector2 tileSize = new Vector2(
+                (position.width - (layerSize * offset)) / layerSize,
+                (position.height - (layerSize * offset + marginTop)) / layerSize
+            );
+
+            Rect tilePosition;
+
+            for (int i = 0; i < layerSize; i++)
+            {
+                for (int j = 0; j < layerSize; j++)
+                {
+                    tilePosition = new Rect(
+                        j * (tileSize.x + offset) + (offset / 2),
+                        i * (tileSize.y + offset) + (offset / 2) + marginTop,
+                        tileSize.x,
+                        tileSize.y);
+
+                    if (tilePosition.Contains(e.mousePosition)) 
+                    {
+                        if (selectedObject > 0) DrawSprite(tilePosition, level.objects[selectedObject].GetComponent<SpriteRenderer>().sprite);
+                        if (isMousePressed) {
+                            if (selectedObject >= 0) {
+                                level.layer1[i * layerSize + j] = level.objects[selectedObject];
+                            } else {
+                                level.layer1[i * layerSize + j] = null;
+                            }
+                        }
+                    }
+
+                    EditorGUI.DrawRect(tilePosition, new Color(1, 1, 1, 0.2f));
+                    if (level.layer1[i * layerSize + j] != null) DrawSprite(tilePosition, level.layer1[i * layerSize + j].GetComponent<SpriteRenderer>().sprite);
+                    else EditorGUI.DrawRect(tilePosition, new Color(0, 0, 0, 0));
+                }
+            }
+            Repaint();
         }
 
         public void Erase()
         {
-            int matrixSize = LevelProfile.levelSize;
-            for (int i = 0; i < matrixSize; i++)
+            int layerSize = LevelProfile.levelSize;
+            for (int i = 0; i < layerSize; i++)
             {
-                for (int j = 0; j < matrixSize; j++)
+                for (int j = 0; j < layerSize; j++)
                 {
-                    level.matrix[i * matrixSize + j] = 0;
+                    level.layer1[i * layerSize + j] = null;
                 }
             }
         }

@@ -37,7 +37,10 @@ namespace Shooter
 
         public IEnumerator Shoot()
         {
-            if (!pool.GetFirstReady(self.position + new Vector3(0.25f, 0f))) Debug.Break();
+            if (pool.GetFirstReady(self.position + new Vector3(0.25f, 0f)) == null) {
+                Debug.LogError("Last bullet pool return a null bullet, no more bullet ready in the pool ?");
+                Debug.Break();
+            }
             yield return new WaitForSeconds(1f);
             shootCor = null;
         }

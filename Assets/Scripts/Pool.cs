@@ -44,7 +44,7 @@ namespace Shooter
             pool.ready.Clear();
         }
 
-        public bool GetFirstReady(Vector3 positon)
+        public Poolable GetFirstReady(Vector3? position = null)
         {
             for (int i = 0; i < pool.ready.Count; i++)
             {
@@ -52,12 +52,12 @@ namespace Shooter
                 {
                     pool.ready[i] = false;
                     pool.objects[i].gameObject.SetActive(true);
-                    pool.objects[i].transform.position = positon;
+                    if (position != null) pool.objects[i].transform.position = (Vector3)position;
                     pool.objects[i].OnPooled();
-                    return true;
+                    return pool.objects[i];
                 }
             }
-            return false;
+            return null;
         }
 
         public void Restock(Poolable o)

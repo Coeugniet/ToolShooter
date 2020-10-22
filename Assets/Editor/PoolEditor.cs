@@ -22,12 +22,12 @@ namespace Shooter
 
             Pool o = (Pool)serializedObject.targetObject;
 
-            if (GUILayout.Button("Initialise Bullets"))
+            if (GUILayout.Button("Initialise Objects"))
             {
                 o.Init();
             }
 
-            if (GUILayout.Button("Destroy Bullets"))
+            if (GUILayout.Button("Destroy Objects"))
             {
                 o.DestroyPool();
             }
