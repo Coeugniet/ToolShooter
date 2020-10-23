@@ -37,7 +37,9 @@ namespace Shooter {
         }
 
         void RemoveChunkFromQueue() {
-            pools[chunksPoolIds.Dequeue()].Restock(chunks.Dequeue());
+            ChunkBehaviour c = chunks.Dequeue();
+            c.RestockObjects();
+            pools[chunksPoolIds.Dequeue()].Restock(c);
             AddNewChunkToTheQueue();
         }
 
@@ -49,6 +51,14 @@ namespace Shooter {
                 if (Mathf.Abs(chux - camx) > (chunkSize + (myCamera.orthographicSize * 2 * (16 / 9)) / 2) + 5) {
                     RemoveChunkFromQueue();
                 }
+            }
+        }
+
+        public void OnRestart() {
+            RemoveChunkFromQueue();
+            ChunkBehaviour[] chunksTab = chunks.ToArray<ChunkBehaviour>();
+            for (int i = 0; i < chunksTab.Length; i++) {
+                chunksTab[i].transform.Translate(new Vector2(5, 0));
             }
         }
 

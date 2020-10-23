@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - MainCanvas
   layers:
   - Default
   - TransparentFX
@@ -16,9 +17,9 @@ TagManager:
   - Ennemy
   - Bloc
   - Bonus
-  - 
-  - 
-  - 
+  - Bullet
+  - EnnemyBullet
+  - Player
   - 
   - 
   - 
@@ -49,4 +50,10 @@ TagManager:
     locked: 0
   - name: Balle
     uniqueID: 2565463713
+    locked: 0
+  - name: UI
+    uniqueID: 1391993241
+    locked: 0
+  - name: Cursor
+    uniqueID: 171848917
     locked: 0

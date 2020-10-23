@@ -13,6 +13,8 @@ namespace Shooter
         private Animator _animator;
         [SerializeField]
         private Pool pool;
+        [SerializeField]
+        private float fireRate;
 
         private Coroutine shootCor;
 
@@ -41,7 +43,7 @@ namespace Shooter
                 Debug.LogError("Last bullet pool return a null bullet, no more bullet ready in the pool ?");
                 Debug.Break();
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(fireRate);
             shootCor = null;
         }
     }
